@@ -62,7 +62,7 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    driveSubsystem.setDefaultCommand(new TeleOp(driveSubsystem, () -> -joystick_1.getLeftY(), () -> -joystick_1.getLeftX(), () -> joystick_1.getRightX(), () -> joystick_1.getRightBumper() ));
+    driveSubsystem.setDefaultCommand(new TeleOp(driveSubsystem, () -> -joystick_1.getLeftY(), () -> -joystick_1.getLeftX(), () -> -joystick_1.getRightX(), () -> joystick_1.getRightBumper() ));
    
    
     JKAutoProfile empyyProfile = new JKAutoProfile();
