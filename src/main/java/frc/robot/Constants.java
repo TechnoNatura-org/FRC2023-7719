@@ -7,8 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.math.util.Units;
 import frc.robot.utils.PIDTester;
 
@@ -109,6 +107,10 @@ public final class Constants {
   		public static PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
   		public static PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
 		
+		/*
+		 * ⚠️ TESTING ⚠️ - PLEASE DISABLE 3 LINES BELOW BEFORE PRODUCTION
+		 * ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+		 */
   		public static final PIDTester xControllTester = new PIDTester(xController, "xController", AutoConstants.kPXController, 0, 0);
   		public static final PIDTester yControllTester = new PIDTester(yController, "yController", AutoConstants.kPYController, 0, 0);
   		public static final PIDTester thetaControllTester = new PIDTester(thetaController, "thetaController", AutoConstants.kPYController, 0, 0);

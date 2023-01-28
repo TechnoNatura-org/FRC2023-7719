@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -39,14 +37,13 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.TeleOpCmd;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.utils.PIDTester;
 
 import java.util.List;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+// import com.pathplanner.lib.PathConstraints;
+// import com.pathplanner.lib.PathPlanner;
+// import com.pathplanner.lib.PathPlannerTrajectory;
+// import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -97,6 +94,8 @@ public class RobotContainer {
       driveSubsystem.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
     }, driveSubsystem));
 
+    
+
   }
 
   public JKAutoProfile getAutonomousProfile() {
@@ -111,16 +110,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     // DriverStation.getMatchTime()
-
-
-    PathPlannerTrajectory PIDField = PathPlanner.loadPath("PID Rotation", new PathConstraints(1.2, 3));
-
-    
+    // PathPlannerTrajectory PIDField = PathPlanner.loadPath("PID Rotation", new PathConstraints(1.2, 3));
     
     // PIDField.a
     AutoConstants.thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    PPSwerveControllerCommand pIDSwerveControllerCommand = new PPSwerveControllerCommand(PIDField, driveSubsystem::getPose2d, DriveConstants.kDriveKinematics, AutoConstants.xController, AutoConstants.yController, AutoConstants.thetaController, driveSubsystem::setModuleState,false, driveSubsystem);
+    // PPSwerveControllerCommand pIDSwerveControllerCommand = new PPSwerveControllerCommand(PIDField, driveSubsystem::getPose2d, DriveConstants.kDriveKinematics, AutoConstants.xController, AutoConstants.yController, AutoConstants.thetaController, driveSubsystem::setModuleState,false, driveSubsystem);
 
 
     ProfiledPIDController thtaControllerProfiled = new ProfiledPIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, new Constraints(0.5, 0.2));

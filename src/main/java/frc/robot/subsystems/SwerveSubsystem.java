@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.List;
-import java.util.function.DoubleConsumer;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -16,11 +15,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
-import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 // import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 // import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -177,6 +176,20 @@ public class SwerveSubsystem extends SubsystemBase {
             rearRightModule
         });
     }
+
+    public void setOutput(double output, double rotation[]) {
+        SwerveModuleState frontLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(rotation[0]));
+        SwerveModuleState frontRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(rotation[1]));
+        SwerveModuleState rearLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(rotation[2]));
+        SwerveModuleState rearRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(rotation[3]));
+
+        setModuleState(new SwerveModuleState[] {
+            frontLeftModule,
+            frontRightModule,
+            rearLeftModule,
+            rearRightModule
+        });
+    }
     
     public void setModuleState(SwerveModuleState[] desiredStates) {
         // we use this to normalise all of desired states (module states)
@@ -198,4 +211,22 @@ public class SwerveSubsystem extends SubsystemBase {
 
         return;
     }
+
+    public CommandBase setWheelRotationCmd(double degrees[]) {
+        return runOnce(() -> {
+            setOutput(0, degrees);
+        });
+    }
+    public void setWheelRotation(double degrees[]) {
+        setOutput(0, degrees);
+    }
+    public double[] getWheelsRotationInDegrees() {
+        return new double[] {
+            frontLeftModule.getWheelRotationInDegrees(),
+            frontRightModule.getWheelRotationInDegrees(),
+            rearLeftModule.getWheelRotationInDegrees(),
+            rearRightModule.getWheelRotationInDegrees(),
+        };
+    }
+    
 }

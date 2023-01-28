@@ -127,11 +127,10 @@ public class SwerveModule extends SubsystemBase {
   public void stop() {
     driveMotor.set(0);
     turningMotor.set(0);
+    // turningMotor.get()
   }
   
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public double getWheelRotationInDegrees() {
+    return new Rotation2d(getTurningPosition()).getDegrees();
   }
 }

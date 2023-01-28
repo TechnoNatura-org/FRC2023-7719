@@ -1,11 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class EngageCmd extends PIDCommand {
@@ -17,9 +13,7 @@ public class EngageCmd extends PIDCommand {
             0,
             output -> swerveSubsystem.setOutput(output),
             swerveSubsystem
-        );
-        // this.swerveSubsystem = swerveSubsystem;
-        
+        );        
     }
 
     @Override
