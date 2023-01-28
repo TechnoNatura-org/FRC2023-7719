@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -30,9 +31,14 @@ public class SwerveModule extends SubsystemBase {
 
   private final CANCoder absoluteEncoder;
 
+  private final String moduleName; 
+
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorInverted, int absoluteEncoderId,
-      double absoluteEncoderOffset) {
+      double absoluteEncoderOffset, String moduleName) {
+
+    this.moduleName = moduleName;
+
     absoluteEncoder = new CANCoder(absoluteEncoderId);
     absoluteEncoder.configFactoryDefault();
     absoluteEncoder.configMagnetOffset(absoluteEncoderOffset);
@@ -58,6 +64,7 @@ public class SwerveModule extends SubsystemBase {
     turningPidController = new PIDController(ModuleConstants.kPTurn, 0, 0);
     turningPidController.enableContinuousInput(-Math.PI, Math.PI);
   
+    driveMotor.setIdleMode(IdleMode.kBrake);
     // System.out.print("getTurningPosition()");
     // System.out.println(getTurningPosition());
     // turningMotor.set(turningPidController.calculate(getTurningPosition(), 1));
@@ -79,6 +86,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getDriveVelocity() {
+    // driveEncoder. 
     return driveEncoder.getVelocity();
   }
 
@@ -108,8 +116,12 @@ public class SwerveModule extends SubsystemBase {
 
     state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+
+    double turningSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
+    turningMotor.set(turningSpeed);
     SmartDashboard.putString("Swerve[ " + absoluteEncoder + " ]", state.toString());
+    SmartDashboard.putNumber(moduleName + " Turning", turningSpeed);
+
   }
 
   public void stop() {

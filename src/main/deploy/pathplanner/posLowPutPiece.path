@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.9,
-        "y": 4.42
+        "x": 6.37,
+        "y": 0.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.109089602206982,
-        "y": 4.389407490898315
+        "x": 5.516808351325036,
+        "y": 0.819572767617758
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -24,20 +24,20 @@
     },
     {
       "anchorPoint": {
-        "x": 5.23,
-        "y": 4.43
+        "x": 3.221839898540908,
+        "y": 0.7852275773996003
       },
       "prevControl": {
-        "x": 4.566739294936924,
-        "y": 5.000908016538255
+        "x": 3.2045449333954226,
+        "y": 0.768218142339063
       },
       "nextControl": {
-        "x": 5.633970379960282,
-        "y": 4.08227861894608
+        "x": 3.2391348636863935,
+        "y": 0.8022370124601375
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 0.87,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -49,39 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 5.41,
-        "y": 3.11
+        "x": 2.0,
+        "y": 0.9427178142550741
       },
       "prevControl": {
-        "x": 5.5896928487760595,
-        "y": 3.11
-      },
-      "nextControl": {
-        "x": 5.230307151223941,
-        "y": 3.11
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [
-          "BalanceLevel"
-        ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 0.5
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 3.9,
-        "y": 3.11
-      },
-      "prevControl": {
-        "x": 4.58817807784153,
-        "y": 3.152418195079446
+        "x": 2.0042013712499647,
+        "y": 0.942432284170124
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -97,8 +70,8 @@
       }
     }
   ],
-  "maxVelocity": 1.1,
-  "maxAcceleration": 1.0,
+  "maxVelocity": 1.5,
+  "maxAcceleration": null,
   "isReversed": null,
   "markers": []
 }

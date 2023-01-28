@@ -28,7 +28,7 @@ public class PIDTester extends SubsystemBase {
     @Override
     public void periodic() {
         // TODO Auto-generated method stub
-        double p =SmartDashboard.getNumber(name + "PID_kp", this.kp);
+        double p = SmartDashboard.getNumber(name + "PID_kp", this.kp);
         double i = SmartDashboard.getNumber(name + "PID_ki", this.ki);
         double d = SmartDashboard.getNumber(name + "PID_kd", this.kd);
 

@@ -5,6 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 // import edu.wpi.first.math.controller.ProfiledPIDController;
 // import edu.wpi.first.math.geometry.Pose2d;
 // import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 // import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
@@ -29,9 +37,11 @@ import frc.robot.Constants.AutoTrajectoryFileNames;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.TeleOp;
+import frc.robot.commands.TeleOpCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.PIDTester;
+
+import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -49,25 +59,21 @@ public class RobotContainer {
   private final SwerveSubsystem driveSubsystem = new SwerveSubsystem();
   private final XboxController joystick_1 = new XboxController(OIConstants.kDriverControllerPort);
 
-  private PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-  private PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-  private PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
-		
-  private final PIDTester xControllTester = new PIDTester(xController, "xController", AutoConstants.kPXController, 0, 0);
-  private final PIDTester yControllTester = new PIDTester(yController, "yController", AutoConstants.kPYController, 0, 0);
-  private final PIDTester thetaControllTester = new PIDTester(thetaController, "thetaController", AutoConstants.kPYController, 0, 0);
-
   private final SendableChooser<JKAutoProfile> m_autoCommandChooser = new SendableChooser<>();
 
 
   public RobotContainer() {
 
-    driveSubsystem.setDefaultCommand(new TeleOp(driveSubsystem, () -> -joystick_1.getLeftY(), () -> -joystick_1.getLeftX(), () -> -joystick_1.getRightX(), () -> joystick_1.getRightBumper() ));
+    driveSubsystem.setDefaultCommand(new TeleOpCmd(driveSubsystem, () -> -joystick_1.getLeftY(), () -> -joystick_1.getLeftX(), () -> -joystick_1.getRightX(), () -> joystick_1.getRightBumper() ));
    
    
     JKAutoProfile empyyProfile = new JKAutoProfile();
     m_autoCommandChooser.setDefaultOption("Do nothing", empyyProfile);
-    m_autoCommandChooser.addOption(AutoTrajectoryFileNames.POS_TOP_LEAVE, Autos.posTopLeave());
+    m_autoCommandChooser.addOption(AutoTrajectoryFileNames.POS_TOP_LEAVE, Autos.posTopLeave(AutoTrajectoryFileNames.POS_TOP_LEAVE, driveSubsystem));
+    m_autoCommandChooser.addOption(AutoTrajectoryFileNames.POS_TOP_PICK, Autos.posTopPick(AutoTrajectoryFileNames.POS_TOP_PICK));
+    m_autoCommandChooser.addOption(AutoTrajectoryFileNames.POS_TOP_DOCK, Autos.posTopDock(AutoTrajectoryFileNames.POS_TOP_DOCK, driveSubsystem));
+    m_autoCommandChooser.addOption("PID Straight 1 m", Autos.PIDSTester("PID Straight 2 m", driveSubsystem));
+    m_autoCommandChooser.addOption("PID Straight 1 m 180", Autos.PIDSTester("PID Straight 3 m 180", driveSubsystem));
 
     SmartDashboard.putData("auto choices", m_autoCommandChooser);
 
@@ -82,19 +88,19 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    
     new JoystickButton(joystick_1, XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
       driveSubsystem.zeroHeading();
     }, driveSubsystem));
 
-    // new JoystickButton(joystick_1, XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
-    //   driveSubsystem.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-    // }, driveSubsystem));
+    new JoystickButton(joystick_1, XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
+      driveSubsystem.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
+    }, driveSubsystem));
 
-    // new JoystickButton(joystick_1, XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
-    //   driveSubsystem.ResetPos(xController, yController);
-    // }, driveSubsystem));
+  }
 
-
+  public JKAutoProfile getAutonomousProfile() {
+    return m_autoCommandChooser.getSelected();
   }
 
   /**
@@ -107,23 +113,31 @@ public class RobotContainer {
     // DriverStation.getMatchTime()
 
 
-    PathPlannerTrajectory PIDField = PathPlanner.loadPath("PID Straight 1 m", new PathConstraints(1.2, 1));
+    PathPlannerTrajectory PIDField = PathPlanner.loadPath("PID Rotation", new PathConstraints(1.2, 3));
 
     
     
     // PIDField.a
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    AutoConstants.thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    PPSwerveControllerCommand pIDSwerveControllerCommand = new PPSwerveControllerCommand(PIDField, driveSubsystem::getPose2d, DriveConstants.kDriveKinematics, xController, yController, thetaController, driveSubsystem::setModuleState,false, driveSubsystem);
+    PPSwerveControllerCommand pIDSwerveControllerCommand = new PPSwerveControllerCommand(PIDField, driveSubsystem::getPose2d, DriveConstants.kDriveKinematics, AutoConstants.xController, AutoConstants.yController, AutoConstants.thetaController, driveSubsystem::setModuleState,false, driveSubsystem);
 
+
+    ProfiledPIDController thtaControllerProfiled = new ProfiledPIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, new Constraints(0.5, 0.2));
+    thtaControllerProfiled.enableContinuousInput(-Math.PI, Math.PI);
+
+    Trajectory rotatingTrajectoryPID =  TrajectoryGenerator.generateTrajectory( new Pose2d(0, 0, new Rotation2d(0)),
+    // Pass through these two interior waypoints, making an 's' curve path
+    List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+    // End 3 meters straight ahead of where we started, facing forward
+    new Pose2d(3, 0, new Rotation2d(0)), DriveConstants.trajectoryConfig); 
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(rotatingTrajectoryPID, driveSubsystem::getPose2d, DriveConstants.kDriveKinematics, AutoConstants.xController, AutoConstants.yController, thtaControllerProfiled, driveSubsystem::setModuleState, driveSubsystem);
     return new SequentialCommandGroup(
-      new InstantCommand( () -> {
-        driveSubsystem.resetOdometry(PIDField.getInitialHolonomicPose());
-      }),
-      pIDSwerveControllerCommand,
-      new InstantCommand(() -> {
-        driveSubsystem.stopModules();
-      })
+      // new InstantCommand( () -> {
+      //   driveSubsystem.resetOdometry(PIDField.getInitialHolonomicPose());
+      // }),
+      swerveControllerCommand
+      // nes
     );
   }
 }

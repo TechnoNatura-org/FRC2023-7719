@@ -1,10 +1,16 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.math.util.Units;
+import frc.robot.utils.PIDTester;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -30,11 +36,6 @@ public final class Constants {
 	public static final class DriveConstants {
 
 
-        public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                .setKinematics(DriveConstants.kDriveKinematics);
-
 		public static final double kTrackWidth = 0.59;
 		public static final double kWheelBase = 0.59;
 		public static final Translation2d kFrontLeftPosition = new Translation2d(kWheelBase / 2, kTrackWidth / 2);
@@ -47,6 +48,11 @@ public final class Constants {
 				kRearLeftPosition,
 				kRearRightPosition
 		);
+
+        public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(DriveConstants.kDriveKinematics);
 
 		public static final int kFrontLeftDriveMotorId = 1;
 		public static final int kFrontRightDriveMotorId = 4;
@@ -85,21 +91,33 @@ public final class Constants {
 	// public static 
 
 	public static final class AutoConstants {
+		public static final PathConstraints maxVelocityAcceleration = new PathConstraints(1.2,1.2);
+
         public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
-                DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 20;
+                DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 0;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
         // public static final double kPXController = 1.5;
         // public static final double kPYController = 1.5;
-		public static final double kPXController = 0.00001;
-        public static final double kPYController = 0.00001;
-        public static final double kPThetaController = 3;
+		public static final double kPXController = 0.00001;// 0.00001
+        public static final double kPYController = 0.00001;// 0.00001
+        public static final double kPThetaController = 0.00001;// 3
+
+
+  		public static PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+  		public static PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+  		public static PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+		
+  		public static final PIDTester xControllTester = new PIDTester(xController, "xController", AutoConstants.kPXController, 0, 0);
+  		public static final PIDTester yControllTester = new PIDTester(yController, "yController", AutoConstants.kPYController, 0, 0);
+  		public static final PIDTester thetaControllTester = new PIDTester(thetaController, "thetaController", AutoConstants.kPYController, 0, 0);
+
 
 		// public static final double kDXController = 0;
 		// public static final double kDYController = 0;
-		public static final double kDXController = 0.000010;
-		public static final double kDYController = 0.000009;
+		public static final double kDXController = 0.000010; // PID for making the speed perfect at 1.2 meters per second (max)
+		public static final double kDYController = 0.000009; // PID for making the speed perfect at 1.2 meters per second (max)
 		public static final double kDThetaController = 0;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
@@ -117,14 +135,14 @@ public final class Constants {
 	public static class AutoTrajectoryFileNames {
 		public static final String POS_TOP_LEAVE = "posTopLeave";
 		public static final String POS_TOP_DOCK = "posTopDock";
-		public static final String POS_TOP_PICK = "posTopPick";
+		public static final String POS_TOP_PICK = "posTopTakePiece";
 
 		public static final String POS_MID_LEAVE = "posMidLeave";
 		public static final String POS_MID_DOCK = "posMidDock";
-		public static final String POS_MID_PICK = "posMidPick";
+		public static final String POS_MID_PICK = "posMidTakePiece";
 
 		public static final String POS_LOW_LEAVE = "posLowLeave";
 		public static final String POS_LOW_DOCK = "posLowDock";
-		public static final String POS_LOW_PICK = "posLowPick";
+		public static final String POS_LOW_PICK = "posLowTakePiece";
 	}
 }

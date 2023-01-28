@@ -10,13 +10,13 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class TeleOp extends CommandBase {
+public class TeleOpCmd extends CommandBase {
     private final SwerveSubsystem swerveSubsystem;
     private final Supplier<Double> xSpeedFunction, ySpeedFunction, turningSpeedFuntion;
     private final Supplier<Boolean> fieldOrientedFunction;
 	private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
 
-    public TeleOp(SwerveSubsystem swerveSubsystem, Supplier<Double> xSpeedFunction,
+    public TeleOpCmd(SwerveSubsystem swerveSubsystem, Supplier<Double> xSpeedFunction,
             Supplier<Double> ySpeedFunction, Supplier<Double> turningSpeedFuntion,
             Supplier<Boolean> fieldOrientedFunction) {
         // this.swerveSubsystem =

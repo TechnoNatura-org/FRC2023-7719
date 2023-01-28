@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.List;
+import java.util.function.DoubleConsumer;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 // import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -29,16 +31,16 @@ import frc.robot.Constants.DriveConstants;;
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeftModule = new SwerveModule(DriveConstants.kFrontLeftDriveMotorId,
             DriveConstants.kFrontLeftTurnMotorId, DriveConstants.kLeftDriveMotorInverted,
-            DriveConstants.kFrontLeftCANCoderId, DriveConstants.kFrontLeftAbsEncoderOffset);
+            DriveConstants.kFrontLeftCANCoderId, DriveConstants.kFrontLeftAbsEncoderOffset, "fl");
     private final SwerveModule rearLeftModule = new SwerveModule(DriveConstants.kRearLeftDriveMotorId,
             DriveConstants.kRearLeftTurnMotorId, DriveConstants.kLeftDriveMotorInverted,
-            DriveConstants.kRearLeftCANCoderId, DriveConstants.kRearLeftAbsEncoderOffset);
+            DriveConstants.kRearLeftCANCoderId, DriveConstants.kRearLeftAbsEncoderOffset, "rl");
     private final SwerveModule frontRightModule = new SwerveModule(DriveConstants.kFrontRightDriveMotorId,
             DriveConstants.kFrontRightTurnMotorId, DriveConstants.kRightDriveMotorInverted,
-            DriveConstants.kFrontRightCANCoderId, DriveConstants.kFrontRightAbsEncoderOffset);
+            DriveConstants.kFrontRightCANCoderId, DriveConstants.kFrontRightAbsEncoderOffset, "fr");
     private final SwerveModule rearRightModule = new SwerveModule(DriveConstants.kRearRightDriveMotorId,
             DriveConstants.kRearRightTurnMotorId, DriveConstants.kRightDriveMotorInverted,
-            DriveConstants.kRearRightCANCoderId, DriveConstants.kRearRightAbsEncoderOffset);
+            DriveConstants.kRearRightCANCoderId, DriveConstants.kRearRightAbsEncoderOffset, "rr");
 
     private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
@@ -47,6 +49,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final Field2d field2d = new Field2d();
 
     public SwerveSubsystem() {
+        
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -57,6 +60,8 @@ public class SwerveSubsystem extends SubsystemBase {
         }).start();
 
         SmartDashboard.putData("Field", field2d);
+        SmartDashboard.putData("Gyro", m_gyro);
+
         // this.zeroHeading();
 
         // System.out.println("SET TO 0 degrees");
@@ -96,7 +101,14 @@ public class SwerveSubsystem extends SubsystemBase {
         m_gyro.reset();
     }
 
+    public double getPitch() {
+        return m_gyro.getXComplementaryAngle();
+    }
+
     public double getHeading() {
+        // IMUAxis p =  m_gyro.getYawAxis();
+        // m_gyro
+        // m_gyro
         return Math.IEEEremainder(m_gyro.getAngle(), 360);
     }
 
@@ -150,6 +162,22 @@ public class SwerveSubsystem extends SubsystemBase {
         rearRightModule.stop();
     }
 
+
+    public void setOutput(double output) {
+        SwerveModuleState frontLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
+        SwerveModuleState frontRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
+        SwerveModuleState rearLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
+        SwerveModuleState rearRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
+
+
+        setModuleState(new SwerveModuleState[] {
+            frontLeftModule,
+            frontRightModule,
+            rearLeftModule,
+            rearRightModule
+        });
+    }
+    
     public void setModuleState(SwerveModuleState[] desiredStates) {
         // we use this to normalise all of desired states (module states)
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
