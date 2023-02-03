@@ -96,24 +96,25 @@ public final class Constants {
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 0;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-        // public static final double kPXController = 1.5;
-        // public static final double kPYController = 1.5;
+        public static final double kPXPosController = 1.5;
+        public static final double kPYPosController = 1.5;
 		public static final double kPXController = 0.00001;// 0.00001
         public static final double kPYController = 0.00001;// 0.00001
-        public static final double kPThetaController = 0.00001;// 3
+        // public static final double kPThetaController = 0.00001;// 3
+        public static final double kPThetaController = 3;// 3
 
 
-  		public static PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-  		public static PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+  		public static PIDController xController = new PIDController(AutoConstants.kPXPosController, 0, 0);
+  		public static PIDController yController = new PIDController(AutoConstants.kPYPosController, 0, 0);
   		public static PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
 		
 		/*
 		 * ⚠️ TESTING ⚠️ - PLEASE DISABLE 3 LINES BELOW BEFORE PRODUCTION
 		 * ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 		 */
-  		public static final PIDTester xControllTester = new PIDTester(xController, "xController", AutoConstants.kPXController, 0, 0);
-  		public static final PIDTester yControllTester = new PIDTester(yController, "yController", AutoConstants.kPYController, 0, 0);
-  		public static final PIDTester thetaControllTester = new PIDTester(thetaController, "thetaController", AutoConstants.kPYController, 0, 0);
+  		// public static final PIDTester xControllTester = new PIDTester(xController, "xController", AutoConstants.kPXController, 0, 0);
+  		// public static final PIDTester yControllTester = new PIDTester(yController, "yController", AutoConstants.kPYController, 0, 0);
+  		// public static final PIDTester thetaControllTester = new PIDTester(thetaController, "thetaController", AutoConstants.kPThetaController, 0, 0);
 
 
 		// public static final double kDXController = 0;

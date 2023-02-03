@@ -2,13 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class EngageCmd extends PIDCommand {
     // private SwerveSubsystem swerveSubsystem;
     public EngageCmd(SwerveSubsystem swerveSubsystem) {
         super(
-            new PIDController(0.00001, 0, 0.000009),
+            new PIDController(AutoConstants.kPXController, 0,AutoConstants.kDXController ),
             swerveSubsystem::getPitch,
             0,
             output -> swerveSubsystem.setOutput(output),

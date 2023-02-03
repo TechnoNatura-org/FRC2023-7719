@@ -35,6 +35,7 @@ import frc.robot.Constants.AutoTrajectoryFileNames;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.EngageCmd;
 import frc.robot.commands.TeleOpCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -70,7 +71,8 @@ public class RobotContainer {
     m_autoCommandChooser.addOption(AutoTrajectoryFileNames.POS_TOP_PICK, Autos.posTopPick(AutoTrajectoryFileNames.POS_TOP_PICK));
     m_autoCommandChooser.addOption(AutoTrajectoryFileNames.POS_TOP_DOCK, Autos.posTopDock(AutoTrajectoryFileNames.POS_TOP_DOCK, driveSubsystem));
     m_autoCommandChooser.addOption("PID Straight 1 m", Autos.PIDSTester("PID Straight 2 m", driveSubsystem));
-    m_autoCommandChooser.addOption("PID Straight 1 m 180", Autos.PIDSTester("PID Straight 3 m 180", driveSubsystem));
+    m_autoCommandChooser.addOption("PID Straight Backward", Autos.PIDSTester("PID Straight 3 m 180", driveSubsystem));
+    m_autoCommandChooser.addOption("Mid Engage Testing", Autos.PIDSTester("Mid Dock Testing", driveSubsystem));
 
     SmartDashboard.putData("auto choices", m_autoCommandChooser);
 
@@ -86,13 +88,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    new JoystickButton(joystick_1, XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
-      driveSubsystem.zeroHeading();
-    }, driveSubsystem));
+    // new JoystickButton(joystick_1, XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
+    //   driveSubsystem.zeroHeading();
+    // }, driveSubsystem));
 
-    new JoystickButton(joystick_1, XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
-      driveSubsystem.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
-    }, driveSubsystem));
+    // new JoystickButton(joystick_1, XboxController.Button.kY.value).onTrue(new EngageCmd(driveSubsystem));
+
+    // new JoystickButton(joystick_1, XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
+    //   driveSubsystem.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
+    // }, driveSubsystem));
 
     
 
@@ -109,13 +113,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    // DriverStation.getMatchTime()
-    // PathPlannerTrajectory PIDField = PathPlanner.loadPath("PID Rotation", new PathConstraints(1.2, 3));
-    
-    // PIDField.a
     AutoConstants.thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // PPSwerveControllerCommand pIDSwerveControllerCommand = new PPSwerveControllerCommand(PIDField, driveSubsystem::getPose2d, DriveConstants.kDriveKinematics, AutoConstants.xController, AutoConstants.yController, AutoConstants.thetaController, driveSubsystem::setModuleState,false, driveSubsystem);
 
 
     ProfiledPIDController thtaControllerProfiled = new ProfiledPIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, new Constraints(0.5, 0.2));

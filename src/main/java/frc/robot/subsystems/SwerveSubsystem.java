@@ -126,10 +126,13 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
+
         odometry.update(getRotation2d(), gModulePositions());
         field2d.setRobotPose(getPose2d());
+        
         SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("robot location", getPose2d().getTranslation().toString());
+        SmartDashboard.putNumber("Pitch", getPitch());
         // SmartDashboard.putNumber("velocity", DriveConstants.kDriveKinematics.);
     }
 

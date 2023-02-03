@@ -35,17 +35,6 @@ public final class Autos {
 
         return new JKAutoProfile(command, pathTrajectory.getInitialPose());
     }  
-    public static JKAutoProfile PIDSTester(String pathName, SwerveSubsystem driveSubsystem) {
-
-        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(0.5,0.5));
-
-        CommandBase LeaveCommunity = runPath(driveSubsystem, pathTrajectory);
-        SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(() -> {
-            driveSubsystem.resetOdometry(pathTrajectory.getInitialHolonomicPose());
-        }), LeaveCommunity);
-
-        return new JKAutoProfile(command, pathTrajectory.getInitialPose());
-    }  
 
     public static JKAutoProfile posTopDock(String pathName,SwerveSubsystem driveSubsystem) {
         PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, AutoConstants.maxVelocityAcceleration);
@@ -60,10 +49,39 @@ public final class Autos {
     
         // return new JKAutoProfile();
     } 
+
+
     public static JKAutoProfile posTopPick(String pathName) {
         return new JKAutoProfile();
     }
     
+
+    public static JKAutoProfile PIDSTester(String pathName, SwerveSubsystem driveSubsystem) {
+
+        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(0.5,0.5));
+
+        CommandBase LeaveCommunity = runPath(driveSubsystem, pathTrajectory);
+        SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(() -> {
+            driveSubsystem.resetOdometry(pathTrajectory.getInitialHolonomicPose());
+        }), LeaveCommunity);
+
+        return new JKAutoProfile(command, pathTrajectory.getInitialPose());
+    }  
+
+    public static JKAutoProfile MidEngageTesting(String pathName, SwerveSubsystem driveSubsystem) {
+        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(0.5,0.5));
+
+        CommandBase MidEngageTesting = runPath(driveSubsystem, pathTrajectory);
+
+        EngageCmd engageNow = new EngageCmd(driveSubsystem);
+
+        SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(() -> {
+            driveSubsystem.resetOdometry(pathTrajectory.getInitialHolonomicPose());
+        }), MidEngageTesting);
+
+        return new JKAutoProfile(command, pathTrajectory.getInitialPose());
+    }
+
     public static JKAutoProfile posMidLeave(String pathName) {
         return new JKAutoProfile();
     }
