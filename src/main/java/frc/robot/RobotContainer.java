@@ -88,11 +88,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    // new JoystickButton(joystick_1, XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
-    //   driveSubsystem.zeroHeading();
-    // }, driveSubsystem));
+    new JoystickButton(joystick_1, XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
+      driveSubsystem.zeroHeading();
+    }, driveSubsystem));
 
-    // new JoystickButton(joystick_1, XboxController.Button.kY.value).onTrue(new EngageCmd(driveSubsystem));
+    new JoystickButton(joystick_1, XboxController.Button.kY.value).onTrue(new EngageCmd(driveSubsystem));
 
     // new JoystickButton(joystick_1, XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
     //   driveSubsystem.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
@@ -103,6 +103,7 @@ public class RobotContainer {
   }
 
   public JKAutoProfile getAutonomousProfile() {
+    AutoConstants.thetaController.enableContinuousInput(-Math.PI, Math.PI);
     return m_autoCommandChooser.getSelected();
   }
 

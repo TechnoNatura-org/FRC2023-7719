@@ -76,15 +76,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void setZeroDegree() {
         this.zeroHeading();
-
-        // System.out.println("SET TO 0 degrees");
-        // this.setModuleState(new SwerveModuleState[]{
-        // new SwerveModuleState(0, new Rotation2d(0)),
-        // new SwerveModuleState(0, new Rotation2d(0)),
-        // new SwerveModuleState(0, new Rotation2d(0)),
-        // new SwerveModuleState(0, new Rotation2d(0))
-        // });
-        // System.out.println("DONE SET TO 0 degrees");
     }
 
     public SwerveModulePosition[] gModulePositions() {
@@ -164,6 +155,27 @@ public class SwerveSubsystem extends SubsystemBase {
         rearRightModule.stop();
     }
 
+    public void setModuleState(SwerveModuleState[] desiredStates) {
+        // we use this to normalise all of desired states (module states)
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        frontLeftModule.setDesiredState(desiredStates[0]);
+        frontRightModule.setDesiredState(desiredStates[1]);
+        rearLeftModule.setDesiredState(desiredStates[2]);
+        rearRightModule.setDesiredState(desiredStates[3]);
+
+        SmartDashboard.putNumber("VEL FL", desiredStates[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("VEL FR", desiredStates[1].speedMetersPerSecond);
+        SmartDashboard.putNumber("VEL LL", desiredStates[2].speedMetersPerSecond);
+        SmartDashboard.putNumber("VEL LR", desiredStates[3].speedMetersPerSecond);
+
+        SmartDashboard.putString("ROTATION FL", desiredStates[0].angle.toString());
+        SmartDashboard.putString("ROTATION FR", desiredStates[1].angle.toString());
+        SmartDashboard.putString("ROTATION LL", desiredStates[2].angle.toString());
+        SmartDashboard.putString("ROTATION LR", desiredStates[3].angle.toString());
+
+        return;
+    }
+
 
     public void setOutput(double output) {
         SwerveModuleState frontLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
@@ -194,26 +206,6 @@ public class SwerveSubsystem extends SubsystemBase {
         });
     }
     
-    public void setModuleState(SwerveModuleState[] desiredStates) {
-        // we use this to normalise all of desired states (module states)
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeftModule.setDesiredState(desiredStates[0]);
-        frontRightModule.setDesiredState(desiredStates[1]);
-        rearLeftModule.setDesiredState(desiredStates[2]);
-        rearRightModule.setDesiredState(desiredStates[3]);
-
-        SmartDashboard.putNumber("VEL FL", desiredStates[0].speedMetersPerSecond);
-        SmartDashboard.putNumber("VEL FR", desiredStates[1].speedMetersPerSecond);
-        SmartDashboard.putNumber("VEL LL", desiredStates[2].speedMetersPerSecond);
-        SmartDashboard.putNumber("VEL LR", desiredStates[3].speedMetersPerSecond);
-
-        SmartDashboard.putString("ROTATION FL", desiredStates[0].angle.toString());
-        SmartDashboard.putString("ROTATION FR", desiredStates[1].angle.toString());
-        SmartDashboard.putString("ROTATION LL", desiredStates[2].angle.toString());
-        SmartDashboard.putString("ROTATION LR", desiredStates[3].angle.toString());
-
-        return;
-    }
 
     public CommandBase setWheelRotationCmd(double degrees[]) {
         return runOnce(() -> {

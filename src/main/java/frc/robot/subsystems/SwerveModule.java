@@ -65,9 +65,6 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.enableContinuousInput(-Math.PI, Math.PI);
   
     driveMotor.setIdleMode(IdleMode.kBrake);
-    // System.out.print("getTurningPosition()");
-    // System.out.println(getTurningPosition());
-    // turningMotor.set(turningPidController.calculate(getTurningPosition(), 1));
 
     resetEncoders();
     
@@ -119,6 +116,7 @@ public class SwerveModule extends SubsystemBase {
 
     double turningSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
     turningMotor.set(turningSpeed);
+
     SmartDashboard.putString("Swerve[ " + absoluteEncoder + " ]", state.toString());
     SmartDashboard.putNumber(moduleName + " Turning", turningSpeed);
 

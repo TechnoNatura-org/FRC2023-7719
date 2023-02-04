@@ -103,10 +103,15 @@ public final class Constants {
         // public static final double kPThetaController = 0.00001;// 3
         public static final double kPThetaController = 3;// 3
 
+		// public static final double kDXController = 0;
+		// public static final double kDYController = 0;
+		public static final double kDXController = 0.000010; // PID for making the speed perfect at 1.2 meters per second (max)
+		public static final double kDYController = 0.000009; // PID for making the speed perfect at 1.2 meters per second (max)
+		public static final double kDThetaController = 0;
 
-  		public static PIDController xController = new PIDController(AutoConstants.kPXPosController, 0, 0);
-  		public static PIDController yController = new PIDController(AutoConstants.kPYPosController, 0, 0);
-  		public static PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+  		public static PIDController xController = new PIDController(AutoConstants.kPXPosController, 0, kDXController);
+  		public static PIDController yController = new PIDController(AutoConstants.kPYPosController, 0, kDYController);
+  		public static PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, kDThetaController);
 		
 		/*
 		 * ⚠️ TESTING ⚠️ - PLEASE DISABLE 3 LINES BELOW BEFORE PRODUCTION
@@ -115,13 +120,6 @@ public final class Constants {
   		// public static final PIDTester xControllTester = new PIDTester(xController, "xController", AutoConstants.kPXController, 0, 0);
   		// public static final PIDTester yControllTester = new PIDTester(yController, "yController", AutoConstants.kPYController, 0, 0);
   		// public static final PIDTester thetaControllTester = new PIDTester(thetaController, "thetaController", AutoConstants.kPThetaController, 0, 0);
-
-
-		// public static final double kDXController = 0;
-		// public static final double kDYController = 0;
-		public static final double kDXController = 0.000010; // PID for making the speed perfect at 1.2 meters per second (max)
-		public static final double kDYController = 0.000009; // PID for making the speed perfect at 1.2 meters per second (max)
-		public static final double kDThetaController = 0;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
                 new TrapezoidProfile.Constraints(
