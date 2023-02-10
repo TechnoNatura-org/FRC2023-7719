@@ -10,14 +10,19 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PIDArmSubsystem extends SubsystemBase {
   private TalonSRX m_armMotor1 = new TalonSRX(15);
   private TalonSRX m_armMotor2 = new TalonSRX(16);
   private Encoder m_armEncoder = new Encoder(1, 2);
+
+  private DigitalInput homeSwitch = new DigitalInput(4);
+  private boolean hasReset = false;
 
   private PIDController m_armPID = new PIDController(2.5, 0.2, 0.5);
   private SlewRateLimiter m_armRateLimiter = new SlewRateLimiter(1);
@@ -34,6 +39,14 @@ public class PIDArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    if (homeSwitch.get() == false && hasReset == false) {
+      m_armEncoder.reset();
+      hasReset = true;
+
+      kArmSetpoint = m_armEncoder.getDistance();
+    }
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("armEncoder", m_armEncoder.getDistance()/* /(7*188) */);
     SmartDashboard.putNumber("armSetpoint", kArmSetpoint);
@@ -53,6 +66,18 @@ public class PIDArmSubsystem extends SubsystemBase {
 
   public void setPos(double setpoint) {
     this.kArmSetpoint = setpoint;
+  }
+
+  public CommandBase setPosCmd(double setPoint) {
+    return runOnce(() -> {
+      this.kArmSetpoint = setPoint;
+    });
+  }
+
+  public CommandBase reset() {
+    return runOnce(() -> {
+      hasReset = false;
+    });
   }
 
   public double getPosition() {

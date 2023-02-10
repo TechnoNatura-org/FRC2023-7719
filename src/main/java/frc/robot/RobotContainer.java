@@ -39,7 +39,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.TeleOpCmd;
 import frc.robot.commands.autonomous.EngageCmd;
-import frc.robot.subsystems.LifterSubsystem;
+import frc.robot.subsystems.PIDElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class RobotContainer {
 
   // private final DriverStation driverStation = new DriverStation();
   private final SwerveSubsystem driveSubsystem = new SwerveSubsystem();
-  private final LifterSubsystem lifterSubsystem = new LifterSubsystem(() -> ps4Controller.getLeftY());
+  private final PIDElevatorSubsystem lifterSubsystem = new PIDElevatorSubsystem(() -> ps4Controller.getLeftY());
 
   private final SendableChooser<JKAutoProfile> m_autoCommandChooser = new SendableChooser<>();
 
