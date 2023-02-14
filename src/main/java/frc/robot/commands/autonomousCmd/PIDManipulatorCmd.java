@@ -1,16 +1,16 @@
-package frc.robot.commands.autonomous;
+package frc.robot.commands.autonomousCmd;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PIDArmSubsystem;
-import frc.robot.subsystems.PIDElevatorSubsystem;
+import frc.robot.subsystems.PIDElevatorSubsystem2;
 
 public class PIDManipulatorCmd extends CommandBase {
-    private PIDElevatorSubsystem pidElevatorSubsystem;
+    private PIDElevatorSubsystem2 pidElevatorSubsystem;
     private PIDArmSubsystem pidArmSubsystem;
     private double elevatorSetpoint = 0.0;
     private double armSetpoint = 0.0;
 
-    public PIDManipulatorCmd(PIDElevatorSubsystem pidElevatorSubsystem, PIDArmSubsystem pidArmSubsystem,
+    public PIDManipulatorCmd(PIDElevatorSubsystem2 pidElevatorSubsystem, PIDArmSubsystem pidArmSubsystem,
             double elevatorSetpoint, double armSetpoint) {
         this.pidElevatorSubsystem = pidElevatorSubsystem;
         this.pidArmSubsystem = pidArmSubsystem;

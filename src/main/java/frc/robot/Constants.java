@@ -38,11 +38,12 @@ public final class Constants {
 		public static final double kD = 0.0;
 
 		public static final double kMotorGearRatio = 1.0 / 10.0;
-		public static final double kSprocketRatio = 16.0 / 18.0;
+		public static final double kSprocketRatio = 22.0 / 18.0;
 		public static final double kSprocketRadius = 0.018;
 
 		public static final double kFinalGearRatio = kMotorGearRatio * kSprocketRatio;
 		public static final double kSprocketCircumference = Math.PI * (kSprocketRadius * 2);
+		public static final double kFinalConversionFactor = kFinalGearRatio * kSprocketCircumference;
 
 	}
 
@@ -53,6 +54,9 @@ public final class Constants {
 		public static final int kRearGroundPosition = 4;
 		public static final int kFrontGroundTakePosition = 5;
 		public static final int kRearGroundTakePosition = 6;
+
+		public static final int kGroundZeroPosition = 0;
+
 	}
 
 	public static final class ModuleConstants {
