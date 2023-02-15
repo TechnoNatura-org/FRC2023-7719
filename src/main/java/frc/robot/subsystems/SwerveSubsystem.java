@@ -42,13 +42,14 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kRearRightCANCoderId, DriveConstants.kRearRightAbsEncoderOffset, "rr");
 
     private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0), gModulePositions());
 
     private final Field2d field2d = new Field2d();
 
     public SwerveSubsystem() {
-        
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -95,8 +96,12 @@ public class SwerveSubsystem extends SubsystemBase {
         return m_gyro.getXComplementaryAngle();
     }
 
+    public double getYAngle() {
+        return m_gyro.getYComplementaryAngle();
+    }
+
     public double getHeading() {
-        // IMUAxis p =  m_gyro.getYawAxis();
+        // IMUAxis p = m_gyro.getYawAxis();
         // m_gyro
         // m_gyro
         return Math.IEEEremainder(m_gyro.getAngle(), 360);
@@ -120,10 +125,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
         odometry.update(getRotation2d(), gModulePositions());
         field2d.setRobotPose(getPose2d());
-        
+
         SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("robot location", getPose2d().getTranslation().toString());
         SmartDashboard.putNumber("Pitch", getPitch());
+        SmartDashboard.putNumber("yAngle", getYAngle());
+
         // SmartDashboard.putNumber("velocity", DriveConstants.kDriveKinematics.);
     }
 
@@ -132,20 +139,21 @@ public class SwerveSubsystem extends SubsystemBase {
                 AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
         profiledThetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(List.of(new Pose2d(1, 1, new Rotation2d(90)), new Pose2d(2, 1, new Rotation2d(0))),
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+                List.of(new Pose2d(1, 1, new Rotation2d(90)), new Pose2d(2, 1, new Rotation2d(0))),
                 DriveConstants.trajectoryConfig);
 
-		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory,
-            this::getPose2d,
-            DriveConstants.kDriveKinematics,
-            xController,
-            yController,
-            profiledThetaController,
-            this::setModuleState,
-            this);
-            swerveControllerCommand.execute();
-    
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+                trajectory,
+                this::getPose2d,
+                DriveConstants.kDriveKinematics,
+                xController,
+                yController,
+                profiledThetaController,
+                this::setModuleState,
+                this);
+        swerveControllerCommand.execute();
+
     }
 
     public void stopModules() {
@@ -176,19 +184,17 @@ public class SwerveSubsystem extends SubsystemBase {
         return;
     }
 
-
     public void setOutput(double output) {
         SwerveModuleState frontLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
         SwerveModuleState frontRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
         SwerveModuleState rearLeftModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
         SwerveModuleState rearRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(180));
 
-
         setModuleState(new SwerveModuleState[] {
-            frontLeftModule,
-            frontRightModule,
-            rearLeftModule,
-            rearRightModule
+                frontLeftModule,
+                frontRightModule,
+                rearLeftModule,
+                rearRightModule
         });
     }
 
@@ -199,29 +205,30 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveModuleState rearRightModule = new SwerveModuleState(output, Rotation2d.fromDegrees(rotation[3]));
 
         setModuleState(new SwerveModuleState[] {
-            frontLeftModule,
-            frontRightModule,
-            rearLeftModule,
-            rearRightModule
+                frontLeftModule,
+                frontRightModule,
+                rearLeftModule,
+                rearRightModule
         });
     }
-    
 
     public CommandBase setWheelRotationCmd(double degrees[]) {
         return runOnce(() -> {
             setOutput(0, degrees);
         });
     }
+
     public void setWheelRotation(double degrees[]) {
         setOutput(0, degrees);
     }
+
     public double[] getWheelsRotationInDegrees() {
         return new double[] {
-            frontLeftModule.getWheelRotationInDegrees(),
-            frontRightModule.getWheelRotationInDegrees(),
-            rearLeftModule.getWheelRotationInDegrees(),
-            rearRightModule.getWheelRotationInDegrees(),
+                frontLeftModule.getWheelRotationInDegrees(),
+                frontRightModule.getWheelRotationInDegrees(),
+                rearLeftModule.getWheelRotationInDegrees(),
+                rearRightModule.getWheelRotationInDegrees(),
         };
     }
-    
+
 }

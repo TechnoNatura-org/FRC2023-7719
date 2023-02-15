@@ -9,7 +9,19 @@ public class ArmPositionCmd extends CommandBase {
     private final PIDArmSubsystem armSubsystem;
     // private final PIDElevatorSubsystem pidElevatorSubsystem;
     private int kPosition;
+    private boolean isManipulatorControlled = false;
     // private boolean hasSetPosition = false;
+
+    /** Creates a new ArmPositionCmd. */
+    public ArmPositionCmd(PIDArmSubsystem armSubsystem, int kPosition, boolean isManipulatorControlled) {
+        // Use addRequirements() here to declare subsystem dependencies.
+        this.armSubsystem = armSubsystem;
+        // this.pidElevatorSubsystem = pidElevatorSubsystem;
+        this.kPosition = kPosition;
+        this.isManipulatorControlled = isManipulatorControlled;
+
+        addRequirements(armSubsystem);
+    }
 
     /** Creates a new ArmPositionCmd. */
     public ArmPositionCmd(PIDArmSubsystem armSubsystem, int kPosition) {
@@ -32,15 +44,17 @@ public class ArmPositionCmd extends CommandBase {
 
         // if (hasSetPosition == false) {
         // if (this.pidElevatorSubsystem.atHome() && this.hasSetPosition == false) {
-        if (kPosition == ManipulatorConstants.kFrontGroundPosition) {
-            armSubsystem.setPos(30);
-            return;
-        } else if (kPosition == ManipulatorConstants.kTopNodePosition) {
-            armSubsystem.setPos(110);
-            return;
-        } else if (kPosition == ManipulatorConstants.kRearGroundPosition) {
-            armSubsystem.setPos(-60);
-            return;
+        if (isManipulatorControlled) {
+            if (kPosition == ManipulatorConstants.kFrontGroundPosition) {
+                armSubsystem.setPos(30);
+                return;
+            } else if (kPosition == ManipulatorConstants.kTopNodePosition) {
+                armSubsystem.setPos(110);
+                return;
+            } else if (kPosition == ManipulatorConstants.kRearGroundPosition) {
+                armSubsystem.setPos(-60);
+                return;
+            }
         }
 
         armSubsystem.setPos(kPosition);

@@ -118,7 +118,7 @@ public class RobotContainer {
                 elevatorSubsystem.setDefaultCommand(new ElevatorJoystickCmd(elevatorSubsystem, () -> CoOpDriver
                                 .getRightY()));
                 extenderSubsystem.setDefaultCommand(
-                                new ExtenderJoystickCmd(extenderSubsystem, () -> CoOpDriver.getPOV(0)));
+                                new ExtenderJoystickCmd(extenderSubsystem, () -> CoOpDriver.getPOV()));
 
                 driveSubsystem.setDefaultCommand(new TeleOpCmd(driveSubsystem, () -> -xboxController.getLeftY(),
                                 () -> -xboxController.getLeftX(), () -> -xboxController.getRightX(),
@@ -129,6 +129,12 @@ public class RobotContainer {
                                 new InstantCommand(() -> {
 
                                 }));
+
+                m_autoCommandChooser.addOption("Engage ", Autos.engageTesting(
+                                armSubsystem, extenderSubsystem, elevatorSubsystem, driveSubsystem));
+                m_autoCommandChooser.addOption("Engage Moving", Autos.engageTestingMoving(
+                                armSubsystem, extenderSubsystem, elevatorSubsystem, driveSubsystem));
+
                 m_autoCommandChooser.addOption("Arm testing", Autos.armTesting(
                                 armSubsystem, extenderSubsystem, elevatorSubsystem));
 

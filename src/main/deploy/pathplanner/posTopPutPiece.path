@@ -89,7 +89,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "PutPiece"
+          "putPiece"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",

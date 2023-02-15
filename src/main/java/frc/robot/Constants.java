@@ -110,10 +110,10 @@ public final class Constants {
 		public static final int kRearRightCANCoderId = 11;
 		public static final int kRearLeftCANCoderId = 12;
 
-		public static final double kFrontLeftAbsEncoderOffset = -320;
-		public static final double kFrontRightAbsEncoderOffset = -81;
-		public static final double kRearLeftAbsEncoderOffset = -205;
-		public static final double kRearRightAbsEncoderOffset = -179;
+		public static final double kFrontLeftAbsEncoderOffset = -322;
+		public static final double kFrontRightAbsEncoderOffset = -84;
+		public static final double kRearLeftAbsEncoderOffset = -352;
+		public static final double kRearRightAbsEncoderOffset = -149;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.8;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * 2 * Math.PI;
